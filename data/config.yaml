@@ -1,0 +1,91 @@
+# Simulation Configuration File
+# Intralogistics Simulator - Heterogeneous Fleet Management
+
+# Basic simulation parameters
+simulation:
+  duration_minutes: 480  # 8-hour shift
+  time_step: 1  # minutes
+  
+# Flow generation
+flows:
+  nominal_rate: 10  # tasks per hour
+  exceptional_ratio: 0.15  # 15% of workload is exceptional
+  
+# Dispatching policy
+dispatcher:
+  policy: "priority"  # Options: fifo, priority, load_balancing, preemptive, adaptive
+  
+# Heterogeneous resource fleet configuration
+resources:
+  
+  - resource_id: "AGV_1"
+    type: "automated"  # automated, semi_automated, or manual
+    speed: 20  # tasks per hour
+    capacity: 10  # max queue size
+    availability: 0.95  # uptime percentage (0-1)
+    cost_per_hour: 50
+    max_payload: 30  # kg
+    
+  - resource_id: "CONV_1"
+    type: "semi_automated"
+    speed: 15
+    capacity: 20
+    availability: 0.92
+    cost_per_hour: 30
+    max_payload: 50
+    
+  - resource_id: "OP_1"
+    type: "manual"
+    speed: 10
+    capacity: 5
+    availability: 0.88
+    cost_per_hour: 25
+    max_payload: 25
+    
+  - resource_id: "OP_2"
+    type: "manual"
+    speed: 9  # slightly slower
+    capacity: 5
+    availability: 0.85
+    cost_per_hour: 20
+    max_payload: 25
+
+# Scenario configurations
+scenarios:
+  
+  baseline:
+    name: "Baseline - Nominal Only"
+    nominal_rate: 10
+    exceptional_ratio: 0.0
+    resource_availability: 1.0
+    
+  mixed_mild:
+    name: "Mixed Flows - 15% Exceptional"
+    nominal_rate: 10
+    exceptional_ratio: 0.15
+    resource_availability: 1.0
+    
+  mixed_heavy:
+    name: "Mixed Flows - 30% Exceptional"
+    nominal_rate: 10
+    exceptional_ratio: 0.30
+    resource_availability: 1.0
+    
+  resource_failure:
+    name: "Resource Unavailability - 10% Down"
+    nominal_rate: 10
+    exceptional_ratio: 0.15
+    resource_availability: 0.90
+    
+  demand_spike:
+    name: "Demand Spike - 1.5x Normal"
+    nominal_rate: 15  # 10 * 1.5
+    exceptional_ratio: 0.15
+    resource_availability: 1.0
+
+# Performance thresholds
+thresholds:
+  acceptable_service_level: 0.95  # 95% on-time delivery
+  critical_avg_lateness: 30  # minutes
+  critical_queue_length: 5
+  target_utilization: 0.85  # ideal resource utilization
